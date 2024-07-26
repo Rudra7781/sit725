@@ -11,7 +11,7 @@ $(document).ready(function(){
       $.ajax({
         url:`/add?a=${n1}&b=${n2}`,
         success: function (res){
-            alert(res.data)
+            $("#text").text(res.data)
         }
       })
     });
