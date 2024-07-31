@@ -20,6 +20,9 @@ app.get('/display', (req, res) => {
 app.get('/about', function(req, res) {
     res.sendFile('public/about.html', {root: __dirname })
 });
+app.get('/home', function(req, res) {
+    res.sendFile('public/index.html', {root: __dirname })
+});
 
 app.listen(PORT,() => {
     console.log(`listening at : http://localhost:${PORT}/`)
