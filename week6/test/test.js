@@ -15,26 +15,60 @@ before(async function () {
 });
 
 
-describe("View Routes \n", function () {
+describe("View Routes", function () {
 
-    describe('GET /home and /', () => {
-        it('should return the index.html file', (done) => {
+    describe('GET /home', () => {
+        it('should return status 200', (done) => {
             chai.request(server)
                 .get('/home')
                 .end((err, res) => {
                     expect(res).to.have.status(200);
-                    expect(res).to.be.html;
-                    expect(res.text).to.include('<title>SIT725</title>'); // Modify based on your HTML content
                     done();
                 });
         });
 
-        it('should return the index.html file', (done) => {
+        it('should return HTML content', (done) => {
+            chai.request(server)
+                .get('/home')
+                .end((err, res) => {
+                    expect(res).to.be.html;
+                    done();
+                });
+        });
+
+        it('should contain the correct title', (done) => {
+            chai.request(server)
+                .get('/home')
+                .end((err, res) => {
+                    expect(res.text).to.include('<title>SIT725</title>'); // Modify based on your HTML content
+                    done();
+                });
+        });
+    });
+
+    describe('GET /', () => {
+        it('should return status 200', (done) => {
             chai.request(server)
                 .get('/')
                 .end((err, res) => {
                     expect(res).to.have.status(200);
+                    done();
+                });
+        });
+
+        it('should return HTML content', (done) => {
+            chai.request(server)
+                .get('/')
+                .end((err, res) => {
                     expect(res).to.be.html;
+                    done();
+                });
+        });
+
+        it('should contain the correct title', (done) => {
+            chai.request(server)
+                .get('/')
+                .end((err, res) => {
                     expect(res.text).to.include('<title>SIT725</title>'); // Modify based on your HTML content
                     done();
                 });
@@ -42,27 +76,66 @@ describe("View Routes \n", function () {
     });
 
     describe('GET /add', () => {
-        it('should return the sum of a and b', (done) => {
+        it('should return status 200', (done) => {
             chai.request(server)
                 .get('/add?a=5&b=10')
                 .end((err, res) => {
                     expect(res).to.have.status(200);
+                    done();
+                });
+        });
+
+        it('should return an object', (done) => {
+            chai.request(server)
+                .get('/add?a=5&b=10')
+                .end((err, res) => {
                     expect(res.body).to.be.an('object');
+                    done();
+                });
+        });
+
+        it('should return statusCode 200 in the response body', (done) => {
+            chai.request(server)
+                .get('/add?a=5&b=10')
+                .end((err, res) => {
                     expect(res.body).to.have.property('statusCode', 200);
+                    done();
+                });
+        });
+
+        it('should return the sum of a and b as 15', (done) => {
+            chai.request(server)
+                .get('/add?a=5&b=10')
+                .end((err, res) => {
                     expect(res.body).to.have.property('data', 15);
                     done();
                 });
         });
     });
 
-    // Test for GET /about
     describe('GET /about', () => {
-        it('should return the about.html file', (done) => {
+        it('should return status 200', (done) => {
             chai.request(server)
                 .get('/about')
                 .end((err, res) => {
                     expect(res).to.have.status(200);
+                    done();
+                });
+        });
+
+        it('should return HTML content', (done) => {
+            chai.request(server)
+                .get('/about')
+                .end((err, res) => {
                     expect(res).to.be.html;
+                    done();
+                });
+        });
+
+        it('should contain the correct title', (done) => {
+            chai.request(server)
+                .get('/about')
+                .end((err, res) => {
                     expect(res.text).to.include('<title>About</title>');
                     done();
                 });
@@ -71,10 +144,10 @@ describe("View Routes \n", function () {
 
 });
 
+describe("Model Routes", () => {
 
-describe("Model Routes \n", () => {
     describe("POST /api/todo", () => {
-        it("Should create new todo item", (done) => {
+        it("should return status 200", (done) => {
             var todo = {
                 title: 'Test Todo',
                 desc: 'This is a test',
@@ -84,26 +157,93 @@ describe("Model Routes \n", () => {
                 .post('/api/todo')
                 .send(todo)
                 .end((err, res) => {
-                    expect(res).to.have.status(200)
-                    expect(res.body).to.be.an('object')
+                    expect(res).to.have.status(200);
+                    done();
+                });
+        });
+
+        it("should return an object", (done) => {
+            var todo = {
+                title: 'Test Todo',
+                desc: 'This is a test',
+                date: `11/11/11 00:00:00`
+            };
+            chai.request(server)
+                .post('/api/todo')
+                .send(todo)
+                .end((err, res) => {
+                    expect(res.body).to.be.an('object');
+                    done();
+                });
+        });
+
+        it("should return statusCode 201 in the response body", (done) => {
+            var todo = {
+                title: 'Test Todo',
+                desc: 'This is a test',
+                date: `11/11/11 00:00:00`
+            };
+            chai.request(server)
+                .post('/api/todo')
+                .send(todo)
+                .end((err, res) => {
                     expect(res.body).to.have.property('statusCode', 201);
+                    done();
+                });
+        });
+
+        it("should return a success message", (done) => {
+            var todo = {
+                title: 'Test Todo',
+                desc: 'This is a test',
+                date: `11/11/11 00:00:00`
+            };
+            chai.request(server)
+                .post('/api/todo')
+                .send(todo)
+                .end((err, res) => {
                     expect(res.body).to.have.property('message', 'success');
                     done();
-                })
+                });
         });
     });
 
     describe('GET /api/todo', () => {
-        it("Fetch All Items", (done) => {
+        it("should return status 200", (done) => {
             chai.request(server)
                 .get('/api/todo')
                 .end((err, res) => {
-                    expect(res).to.have.status(200)
-                    expect(res.body).to.be.an('object')
+                    expect(res).to.have.status(200);
+                    done();
+                });
+        });
+
+        it("should return an object", (done) => {
+            chai.request(server)
+                .get('/api/todo')
+                .end((err, res) => {
+                    expect(res.body).to.be.an('object');
+                    done();
+                });
+        });
+
+        it("should return statusCode 200 in the response body", (done) => {
+            chai.request(server)
+                .get('/api/todo')
+                .end((err, res) => {
                     expect(res.body).to.have.property('statusCode', 200);
+                    done();
+                });
+        });
+
+        it("should return a success message", (done) => {
+            chai.request(server)
+                .get('/api/todo')
+                .end((err, res) => {
                     expect(res.body).to.have.property('message', 'get all todos successful');
                     done();
-                })
-        })
-    })
+                });
+        });
+    });
+
 });
